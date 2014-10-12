@@ -6,6 +6,7 @@ var router = express.Router();
  */
 router.get('/userlist', function(req, res) {
     var db = req.db;
+
     db.collection('userlist').find().toArray(function (err, items) {
         res.json(items);
     });
@@ -32,6 +33,17 @@ router.delete('/deleteuser/:id', function(req, res) {
     db.collection('userlist').removeById(userToDelete, function(err, result) {
         res.send((result === 1) ? { msg: '' } : { msg:'error: ' + err });
     });
+});
+
+/*
+* FIND the user
+*/
+router.get('/find/:query', function(req,res){
+  var db = req.db;
+  var matcher = new RegExp(req.params.query,'i');
+  db.collection('userlist').find({ 'fullname': matcher}).toArray(function(err,items){
+    res.json(items);
+  });
 });
 
 

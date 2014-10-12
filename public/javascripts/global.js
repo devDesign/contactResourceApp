@@ -5,8 +5,7 @@ var userListData = [];
 $(document).ready(function() {
 
     // Populate the user table on initial page load
-    populateTable();
-
+    populateTable('/users/userlist');
     // Username link click
     $('#userList table tbody').on('click', 'td a.linkshowuser', showUserInfo);
 
@@ -16,18 +15,29 @@ $(document).ready(function() {
      // Delete User link click
     $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 
+    $('#searchUserName').on('keyup',function(e){
+        $('#userList table tbody').html("");
+        val = $(this).val();
+        if (val == '' || val == ' '){ populateTable('/users/userlist') }
+        else{ populateTable('/users/find/'+val) }
+    });
+
 });
 
-// Functions =============================================================
+function search(){
+    val = $('#searchUserName').val();
+    populateTable('/users/find/'+val);
+
+}
 
 // Fill table with data
-function populateTable() {
+function populateTable(target) {
 
     // Empty content string
     var tableContent = '';
 
     // jQuery AJAX call for JSON
-    $.getJSON( '/users/userlist', function( data ) {
+    $.getJSON( target, function( data ) {
         // Stick our user data array into a userlist variable in the global object
         userListData = data;
 

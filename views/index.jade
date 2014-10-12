@@ -2,10 +2,13 @@ extends layout
 
 block content
     h1= title
-    p Welcome to our test
 
     // Wrapper
     #wrapper
+        #searchUser
+            fieldset
+                input#searchUserName(type='text', placeholder='Username')
+        // /search
 
         // USER INFO
         #userInfo
@@ -29,7 +32,7 @@ block content
         #userList
             table
                 thead
-                    th UserName
+                    th Name
                     th Email
                     th Delete?
                 tbody
