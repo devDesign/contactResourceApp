@@ -46,5 +46,30 @@ router.get('/find/:query', function(req,res){
   });
 });
 
+/*
+ * POST to data miner.
+ */
+router.post('/dataminer', function(req, res) {
+    var db = req.db;
+    db.collection('datalist').insert(req.body, function(err, result){
+        res.send(
+            (err === null) ? { msg: '' } : { msg: err }
+        );
+    });
+});
+
+
+/*
+ * GET dataminer.
+ */
+router.get('/dataminer', function(req, res) {
+    var db = req.db;
+
+    db.collection('datalist').find().toArray(function (err, items) {
+        res.json(items);
+    });
+});
+
+
 
 module.exports = router;

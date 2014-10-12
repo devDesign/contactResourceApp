@@ -16,18 +16,53 @@ $(document).ready(function() {
     $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
 
     $('#searchUserName').on('keyup',function(e){
-        $('#userList table tbody').html("");
+       /* $('#userList table tbody').html("");*/
         val = $(this).val();
         if (val == '' || val == ' '){ populateTable('/users/userlist') }
-        else{ populateTable('/users/find/'+val) }
+        else{ populateTable('/users/find/'+val);
+            dataminer(val);
+         }
     });
 
 });
 
-function search(){
-    val = $('#searchUserName').val();
-    populateTable('/users/find/'+val);
+function dataminer(data){
+    function myIP() {
+        if (window.XMLHttpRequest) xmlhttp = new XMLHttpRequest();
+        else xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 
+        xmlhttp.open("GET","http://api.hostip.info/get_html.php",false);
+        xmlhttp.send();
+
+        hostipInfo = xmlhttp.responseText.split("\n");
+
+        for (i=0; hostipInfo.length >= i; i++) {
+            ipAddress = hostipInfo[i].split(":");
+            if ( ipAddress[0] == "IP" ) return ipAddress[1];
+        }
+
+        return false;
+    }
+    ip = myIP();
+    datamine = {"string": data, "ip": ip};
+    $.ajax({
+            type: 'POST',
+            data: datamine,
+            url: '/users/dataminer',
+            dataType: 'JSON'
+        }).done(function( response ) {
+
+            // Check for successful (blank) response
+            if (response.msg === '') {
+
+            }
+            else {
+
+                // If something goes wrong, alert the error message that our service returned
+                alert('Error: ' + response.msg);
+
+            }
+        });
 }
 
 // Fill table with data
